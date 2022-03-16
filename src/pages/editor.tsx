@@ -2,10 +2,15 @@ import * as React from "react";
 import styled from "styled-components";
 import { useStateWithStorage } from "../hooks/use_state_with_storage";
 import * as ReactMarkdown from "react-markdown";
+import { putMemo } from "../indexeddb/memos";
+import { Button } from "../components/button";
 
 const Header = styled.header`
+  align-content: center;
+  display: flex;
   font-size: 1.5rem;
   height: 2rem;
+  justify-content: space-between;
   left: 0;
   line-height: 2rem;
   padding: 0.5rem 1rem;
@@ -34,6 +39,12 @@ const TextArea = styled.textarea`
   width: 50vw;
 `;
 
+const HeaderControl = styled.div`
+  height: 2rem;
+  display: flex;
+  align-content: center;
+`;
+
 const Preview = styled.div`
   border-top: 1px solid silver;
   bottom: 0;
@@ -51,9 +62,18 @@ export const Editor: React.FC = () => {
   // locallStorageの値があるか否かをチェック
   const [text, setText] = useStateWithStorage("", StorageKey);
 
+  const saveMemo = (): void => {
+    putMemo("TITLE", text);
+  };
+
   return (
     <>
-      <Header>Markdown Editor</Header>
+      <Header>
+        Markdown Editor
+        <HeaderControl>
+          <Button onClick={saveMemo}>保存する</Button>
+        </HeaderControl>
+      </Header>
       <Wrapper>
         <TextArea
           onChange={(event) => setText(event.target.value)}
